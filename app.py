@@ -12,6 +12,21 @@ EXP_FOLDER = os.path.join(RESULT_FOLDER, 'exp')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESULT_FOLDER'] = RESULT_FOLDER
 
+# =========================================
+# AUTO-TÉLÉCHARGEMENT DES IMAGES DE DÉMO
+# =========================================
+
+@app.before_first_request
+def download_demo_images_if_needed():
+    dataset_folder = "coco_20_images"
+    script_path = "extract_coco_images.py"
+    if not os.path.exists(dataset_folder):
+        print("📦 Dossier 'coco_20_images' manquant. Téléchargement en cours...")
+        os.system(f"python {script_path}")
+    else:
+        print("✅ Dossier 'coco_20_images' déjà présent. Aucun téléchargement nécessaire.")
+
+
 model = YOLO('yolov5s.pt')
 
 @app.route('/')
